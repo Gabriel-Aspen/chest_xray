@@ -1,5 +1,5 @@
 numpy
 pandas
-cv2-tools
+opencv-python
 matplotlib
 tensorflow

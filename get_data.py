@@ -5,18 +5,15 @@ import cv2
 import random
 import pickle
 
-DATADIR = 'data/train'
-CATEGORIES = ['NORMAL', 'PNEUMONIA']
 
-def get_data(datadir, categories):
-  DATADIR = datadir
-  CATEGORIES = categories
+def get_data(datadir, type="train"):
+  categories = ['NORMAL', 'PNEUMONIA']
   IMG_SIZE = 224
 
   training_data = []
-  for category in CATEGORIES:
-    path = os.path.join(DATADIR, category)
-    class_num = CATEGORIES.index(category)
+  for category in categories:
+    path = os.path.join(datadir, category)
+    class_num = categories.index(category)
     for img in os.listdir(path)[:]:
       try:
         img_array = cv2.imread(os.path.join(path,img), cv2.IMREAD_GRAYSCALE) #grayscale
@@ -32,10 +29,18 @@ def get_data(datadir, categories):
     X.append(features)
     y.append(label)
   X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1) #the last one is because its in grayscale
-  with open('pickle_files/X_train.pickle, 'wb') as pickle_out: #name the X!
+  with open('pickle_files/X_{}.pickle'.format(type), 'wb') as pickle_out: #name the X!
     pickle.dump(X, pickle_out)
     pickle_out.close()
-  with open('pickle_files/y_train.pickle', 'wb') as pickle_out: #name the y!
+  with open('pickle_files/y_{}.pickle'.format(type), 'wb') as pickle_out: #name the y!
       pickle.dump(y, pickle_out)
       pickle_out.close()
-get_data(DATADIR, CATEGORIES)
+
+
+training_dir = 'data/train'
+test_dir = "data/test"
+val_dir = "data/val"
+# create the data
+get_data(training_dir, type = "train")
+get_data(test_dir, type = "test")
+get_data(val_dir, type = "val")
